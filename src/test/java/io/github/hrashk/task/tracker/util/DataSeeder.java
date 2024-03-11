@@ -1,5 +1,8 @@
 package io.github.hrashk.task.tracker.util;
 
+import io.github.hrashk.task.tracker.tasks.Task;
+import io.github.hrashk.task.tracker.tasks.TaskRepository;
+import io.github.hrashk.task.tracker.tasks.TaskStatus;
 import io.github.hrashk.task.tracker.users.User;
 import io.github.hrashk.task.tracker.users.UserRepository;
 import lombok.Getter;
@@ -8,8 +11,11 @@ import lombok.experimental.Accessors;
 import net.datafaker.Faker;
 import org.springframework.boot.test.context.TestComponent;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
@@ -19,18 +25,26 @@ import java.util.stream.IntStream;
 @Accessors(fluent = true)
 public class DataSeeder {
     private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
     private final Random random = ThreadLocalRandom.current();
     private final Faker faker = new Faker(random);
 
     @Getter
     private List<User> users;
+    @Getter
+    private List<Task> tasks;
 
     public void seed(int count) {
-        users = userRepository.saveAll(sampleUsers(count)).collectList().block();
+        users = userRepository.saveAll(sampleUsers()).collectList().block();
+        tasks = taskRepository.saveAll(sampleTasks()).collectList().block();
     }
 
-    private Iterable<User> sampleUsers(int count) {
-        return IntStream.range(0, count).mapToObj(idx -> aRandomUser()).toList();
+    public void wipe() {
+        userRepository.deleteAll().block();
+    }
+
+    private Iterable<User> sampleUsers() {
+        return IntStream.range(0, 7).mapToObj(idx -> aRandomUser()).toList();
     }
 
     private User aRandomUser() {
@@ -43,7 +57,50 @@ public class DataSeeder {
                 .build();
     }
 
-    public void wipe() {
-        userRepository.deleteAll().block();
+    private Iterable<Task> sampleTasks() {
+        return List.of(
+                new Task().toBuilder()
+                        .id(UUID.randomUUID().toString())
+                        .name("Task name 1")
+                        .description("Task description 1")
+                        .createdAt(Instant.now().minus(3, ChronoUnit.DAYS))
+                        .updatedAt(Instant.now().minus(1, ChronoUnit.DAYS))
+                        .status(TaskStatus.TODO)
+                        .authorId(users.get(0).getId())
+                        .author(users.get(0))
+                        .build(),
+
+                new Task().toBuilder()
+                        .id(UUID.randomUUID().toString())
+                        .name("Task name 2")
+                        .description("Task description 2")
+                        .createdAt(Instant.now().minus(7, ChronoUnit.DAYS))
+                        .updatedAt(Instant.now().minus(5, ChronoUnit.DAYS))
+                        .status(TaskStatus.IN_PROGRESS)
+                        .authorId(users.get(1).getId())
+                        .author(users.get(1))
+                        .assigneeId(users.get(2).getId())
+                        .assignee(users.get(2))
+                        .build(),
+
+                new Task().toBuilder()
+                        .id(UUID.randomUUID().toString())
+                        .name("Task name 3")
+                        .description("Task description 3")
+                        .createdAt(Instant.now().minus(2, ChronoUnit.DAYS))
+                        .updatedAt(Instant.now())
+                        .status(TaskStatus.DONE)
+
+                        .authorId(users.get(0).getId())
+                        .author(users.get(0))
+
+                        .assigneeId(users.get(3).getId())
+                        .assignee(users.get(3))
+
+                        .observerIds(Set.of(users.get(4).getId(), users.get(5).getId()))
+                        .observers(Set.of(users.get(4), users.get(5)))
+
+                        .build()
+        );
     }
 }

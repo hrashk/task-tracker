@@ -11,7 +11,7 @@ public class TaskTests extends IntegrationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(TaskModel.class)
-                .hasSize(5)
+                .hasSize(3)
         ;
     }
 }
