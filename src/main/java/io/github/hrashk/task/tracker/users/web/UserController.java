@@ -1,5 +1,6 @@
 package io.github.hrashk.task.tracker.users.web;
 
+import io.github.hrashk.task.tracker.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,8 +11,12 @@ import reactor.core.publisher.Flux;
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
+    private final UserRepository repository;
+    private final UserMapper mapper;
+
     @GetMapping
     public Flux<UserModel> getAllUsers() {
-        return Flux.empty();
+        return repository.findAll()
+                .map(mapper::map);
     }
 }
