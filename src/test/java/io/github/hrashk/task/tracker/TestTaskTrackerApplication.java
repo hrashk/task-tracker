@@ -21,7 +21,7 @@ public class TestTaskTrackerApplication {
 
     @Bean
     CommandLineRunner seedSampleData(DataSeeder generator) {
-        return args -> generator.seed(5);
+        return args -> generator.seed();
     }
 
     public static void main(String[] args) {

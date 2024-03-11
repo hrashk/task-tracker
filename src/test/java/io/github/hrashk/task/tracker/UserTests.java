@@ -11,7 +11,7 @@ class UserTests extends IntegrationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(UserModel.class)
-                .hasSize(5)
+                .hasSize(7)
         ;
     }
 }

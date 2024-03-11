@@ -34,12 +34,13 @@ public class DataSeeder {
     @Getter
     private List<Task> tasks;
 
-    public void seed(int count) {
+    public void seed() {
         users = userRepository.saveAll(sampleUsers()).collectList().block();
         tasks = taskRepository.saveAll(sampleTasks()).collectList().block();
     }
 
     public void wipe() {
+        taskRepository.deleteAll().block();
         userRepository.deleteAll().block();
     }
 

@@ -24,7 +24,7 @@ public abstract class IntegrationTest {
 
     @BeforeEach
     void seedData() {
-        seeder.seed(5);
+        seeder.seed();
     }
 
     @AfterEach
