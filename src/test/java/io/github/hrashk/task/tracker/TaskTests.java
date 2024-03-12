@@ -21,5 +21,9 @@ public class TaskTests extends IntegrationTest {
 
         assertThat(response).allSatisfy(tm ->
                 assertThat(tm.author()).as("task author").isNotNull());
+        assertThat(response).anySatisfy(tm ->
+                assertThat(tm.assignee()).as("task assignee").isNotNull());
+        assertThat(response).anySatisfy(tm ->
+                assertThat(tm.observers()).as("task observers").isNotEmpty());
     }
 }

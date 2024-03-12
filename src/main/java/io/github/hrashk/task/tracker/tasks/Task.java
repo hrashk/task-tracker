@@ -10,7 +10,8 @@ import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -35,4 +36,42 @@ public class Task {
     User assignee;
     @ReadOnlyProperty
     Set<User> observers;
+
+    public Collection<String> mergeUserIds() {
+        Set<String> ids = new HashSet<>();
+
+        if (getObserverIds() != null) {
+            getObserverIds().stream()
+                    .filter(Objects::nonNull)
+                    .forEach(ids::add);
+        }
+
+        if (getAuthorId() != null) {
+            ids.add(getAuthorId());
+        }
+
+        if (getAssigneeId() != null) {
+            ids.add(getAssigneeId());
+        }
+
+        return ids;
+    }
+
+    public void updateUsers(Map<String, User> userMap) {
+        if (getAuthorId() != null) {
+            setAuthor(userMap.get(getAuthorId()));
+        }
+
+        if (getAssigneeId() != null) {
+            setAssignee(userMap.get(getAssigneeId()));
+        }
+
+        if (getObserverIds() != null) {
+            Set<User> observers = getObserverIds().stream()
+                    .filter(Objects::nonNull)
+                    .map(userMap::get)
+                    .collect(Collectors.toSet());
+            setObservers(observers);
+        }
+    }
 }

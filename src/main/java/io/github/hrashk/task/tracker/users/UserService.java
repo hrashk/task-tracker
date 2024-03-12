@@ -12,4 +12,8 @@ public class UserService {
     public Flux<User> getAllUsers() {
         return repository.findAll();
     }
+
+    public Flux<User> getUsersById(Iterable<String> ids) {
+        return repository.findAllById(ids);
+    }
 }
