@@ -1,6 +1,6 @@
 package io.github.hrashk.task.tracker.tasks.web;
 
-import io.github.hrashk.task.tracker.tasks.TaskRepository;
+import io.github.hrashk.task.tracker.tasks.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,12 +11,12 @@ import reactor.core.publisher.Flux;
 @RequestMapping("/api/v1/tasks")
 @RequiredArgsConstructor
 public class TaskController {
-    private final TaskRepository taskRepository;
+    private final TaskService taskService;
     private final TaskMapper mapper;
 
     @GetMapping
     public Flux<TaskModel> getAllTasks() {
-        return taskRepository.findAll()
+        return taskService.getAllTasks()
                 .map(mapper::map);
     }
 }
