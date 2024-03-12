@@ -74,4 +74,36 @@ public class Task {
             setObservers(observers);
         }
     }
+
+    public static class TaskBuilder {
+        public TaskBuilder author(User user) {
+            this.author = user;
+
+            if (user != null) {
+                this.authorId = user.getId();
+            }
+
+            return this;
+        }
+
+        public TaskBuilder assignee(User user) {
+            this.assignee = user;
+
+            if (user != null) {
+                this.assigneeId = user.getId();
+            }
+
+            return this;
+        }
+
+        public TaskBuilder observers(Set<User> users) {
+            this.observers = users;
+
+            if (users != null) {
+                this.observerIds = users.stream().map(User::getId).collect(Collectors.toSet());
+            }
+
+            return this;
+        }
+    }
 }

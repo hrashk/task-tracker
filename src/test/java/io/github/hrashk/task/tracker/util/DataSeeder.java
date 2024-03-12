@@ -71,7 +71,6 @@ public class DataSeeder {
                 .updatedAt(Instant.now().minus(1, ChronoUnit.DAYS))
                 .status(TaskStatus.TODO)
 
-                .authorId(users.get(0).getId())
                 .author(users.get(0))
 
                 .build();
@@ -86,10 +85,7 @@ public class DataSeeder {
                 .updatedAt(Instant.now().minus(5, ChronoUnit.DAYS))
                 .status(TaskStatus.IN_PROGRESS)
 
-                .authorId(users.get(1).getId())
                 .author(users.get(1))
-
-                .assigneeId(users.get(2).getId())
                 .assignee(users.get(2))
 
                 .build();
@@ -104,13 +100,8 @@ public class DataSeeder {
                 .updatedAt(Instant.now())
                 .status(TaskStatus.DONE)
 
-                .authorId(users.get(0).getId())
                 .author(users.get(0))
-
-                .assigneeId(users.get(3).getId())
                 .assignee(users.get(3))
-
-                .observerIds(Set.of(users.get(4).getId(), users.get(5).getId()))
                 .observers(Set.of(users.get(4), users.get(5)))
 
                 .build();
