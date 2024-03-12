@@ -59,49 +59,60 @@ public class DataSeeder {
     }
 
     private Iterable<Task> sampleTasks() {
-        return List.of(
-                new Task().toBuilder()
-                        .id(UUID.randomUUID().toString())
-                        .name("Task name 1")
-                        .description("Task description 1")
-                        .createdAt(Instant.now().minus(3, ChronoUnit.DAYS))
-                        .updatedAt(Instant.now().minus(1, ChronoUnit.DAYS))
-                        .status(TaskStatus.TODO)
-                        .authorId(users.get(0).getId())
-                        .author(users.get(0))
-                        .build(),
+        return List.of(task1(), task2(), task3());
+    }
 
-                new Task().toBuilder()
-                        .id(UUID.randomUUID().toString())
-                        .name("Task name 2")
-                        .description("Task description 2")
-                        .createdAt(Instant.now().minus(7, ChronoUnit.DAYS))
-                        .updatedAt(Instant.now().minus(5, ChronoUnit.DAYS))
-                        .status(TaskStatus.IN_PROGRESS)
-                        .authorId(users.get(1).getId())
-                        .author(users.get(1))
-                        .assigneeId(users.get(2).getId())
-                        .assignee(users.get(2))
-                        .build(),
+    private Task task1() {
+        return new Task().toBuilder()
+                .id(UUID.randomUUID().toString())
+                .name("Task name 1")
+                .description("Task description 1")
+                .createdAt(Instant.now().minus(3, ChronoUnit.DAYS))
+                .updatedAt(Instant.now().minus(1, ChronoUnit.DAYS))
+                .status(TaskStatus.TODO)
 
-                new Task().toBuilder()
-                        .id(UUID.randomUUID().toString())
-                        .name("Task name 3")
-                        .description("Task description 3")
-                        .createdAt(Instant.now().minus(2, ChronoUnit.DAYS))
-                        .updatedAt(Instant.now())
-                        .status(TaskStatus.DONE)
+                .authorId(users.get(0).getId())
+                .author(users.get(0))
 
-                        .authorId(users.get(0).getId())
-                        .author(users.get(0))
+                .build();
+    }
 
-                        .assigneeId(users.get(3).getId())
-                        .assignee(users.get(3))
+    private Task task2() {
+        return new Task().toBuilder()
+                .id(UUID.randomUUID().toString())
+                .name("Task name 2")
+                .description("Task description 2")
+                .createdAt(Instant.now().minus(7, ChronoUnit.DAYS))
+                .updatedAt(Instant.now().minus(5, ChronoUnit.DAYS))
+                .status(TaskStatus.IN_PROGRESS)
 
-                        .observerIds(Set.of(users.get(4).getId(), users.get(5).getId()))
-                        .observers(Set.of(users.get(4), users.get(5)))
+                .authorId(users.get(1).getId())
+                .author(users.get(1))
 
-                        .build()
-        );
+                .assigneeId(users.get(2).getId())
+                .assignee(users.get(2))
+
+                .build();
+    }
+
+    private Task task3() {
+        return new Task().toBuilder()
+                .id(UUID.randomUUID().toString())
+                .name("Task name 3")
+                .description("Task description 3")
+                .createdAt(Instant.now().minus(2, ChronoUnit.DAYS))
+                .updatedAt(Instant.now())
+                .status(TaskStatus.DONE)
+
+                .authorId(users.get(0).getId())
+                .author(users.get(0))
+
+                .assigneeId(users.get(3).getId())
+                .assignee(users.get(3))
+
+                .observerIds(Set.of(users.get(4).getId(), users.get(5).getId()))
+                .observers(Set.of(users.get(4), users.get(5)))
+
+                .build();
     }
 }
