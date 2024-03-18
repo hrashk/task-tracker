@@ -21,4 +21,8 @@ public class UserService {
     public Mono<User> findById(String id) {
         return repository.findById(id);
     }
+
+    public Mono<User> save(User user) {
+        return repository.save(user);
+    }
 }
