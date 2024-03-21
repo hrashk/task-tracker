@@ -16,8 +16,7 @@ class UserTests extends IntegrationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(UserModel.class)
-                .hasSize(7)
-        ;
+                .hasSize(7);
     }
 
     @Test
@@ -31,8 +30,7 @@ class UserTests extends IntegrationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(UserModel.class)
-                .value(u -> assertThat(u.email()).isEqualTo(email))
-        ;
+                .value(u -> assertThat(u.email()).isEqualTo(email));
     }
 
     @Test
@@ -68,5 +66,18 @@ class UserTests extends IntegrationTest {
         assertThat(updatedUser.id()).isEqualTo(userModel.id());
 
         checkUserById(updatedUser.id(), FANCY_EMAIL);
+    }
+
+    @Test
+    void deleteUser() {
+        User user = seeder.users().get(0);
+
+        webTestClient.delete().uri("/api/v1/users/" + user.getId())
+                .exchange()
+                .expectStatus().isNoContent();
+
+        webTestClient.get().uri("/api/v1/users/" + user.getId())
+                .exchange()
+                .expectStatus().isNotFound();
     }
 }

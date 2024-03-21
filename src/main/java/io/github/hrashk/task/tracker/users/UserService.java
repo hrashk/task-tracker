@@ -34,4 +34,8 @@ public class UserService {
             return repository.save(updatedUser);
         });
     }
+
+    public Mono<Void> deleteById(String id) {
+        return repository.deleteById(id);
+    }
 }

@@ -46,4 +46,9 @@ public class UserController {
                 .map(mapper::map)
                 .map(ResponseEntity::ok);
     }
+
+    @DeleteMapping("/{id}")
+    public Mono<ResponseEntity<Void>> deleteUser(@PathVariable String id) {
+        return userService.deleteById(id).then(Mono.just(ResponseEntity.noContent().build()));
+    }
 }
