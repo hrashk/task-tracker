@@ -39,4 +39,11 @@ public class UserController {
                         .created(URI.create("/api/v1/users/" + body.id()))
                         .body(body));
     }
+
+    @PutMapping("/{id}")
+    public Mono<ResponseEntity<UserModel>> updateUser(@PathVariable String id, @RequestBody UserModel user) {
+        return userService.update(id, mapper.map(user))
+                .map(mapper::map)
+                .map(ResponseEntity::ok);
+    }
 }
