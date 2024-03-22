@@ -17,15 +17,20 @@ public class TaskService {
 
     public Flux<Task> getAllTasks() {
         return taskRepository.findAll()
-                .flatMap(t -> userService.getUsersById(t.mergeUserIds())
-                        .collectMap(User::getId)
-                        .doOnNext(t::updateUsers)
-                        .defaultIfEmpty(Map.of())
-                        .thenReturn(t));
+                .flatMap(this::fetchLinkedUsers);
+    }
+
+    private Mono<Task> fetchLinkedUsers(Task t) {
+        return userService.getUsersById(t.mergeUserIds())
+                .collectMap(User::getId)
+                .doOnNext(t::updateUsers)
+                .defaultIfEmpty(Map.of())
+                .thenReturn(t);
     }
 
     public Mono<Task> findById(String id) {
-        return taskRepository.findById(id);
+        return taskRepository.findById(id)
+                .flatMap(this::fetchLinkedUsers);
     }
 
     public Mono<Task> save(Task task) {

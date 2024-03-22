@@ -35,17 +35,23 @@ public class TaskTests extends IntegrationTest {
 
     @Test
     void getTaskById() {
-        Task t = seeder.tasks().get(0);
+        Task t = seeder.tasks().get(2);
 
-        checkTaskName(t.getId(), t.getName());
+        TaskModel taskModel = checkTaskName(t.getId(), t.getName());
+
+        assertThat(taskModel.author()).as("Task author").isNotNull();
+        assertThat(taskModel.assignee()).as("Task assignee").isNotNull();
+        assertThat(taskModel.observers()).as("Task observers").isNotEmpty();
     }
 
-    private void checkTaskName(String id, String name) {
-        webTestClient.get().uri("/api/v1/tasks/" + id)
+    private TaskModel checkTaskName(String id, String name) {
+        return webTestClient.get().uri("/api/v1/tasks/" + id)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(TaskModel.class)
-                .value(tm -> assertThat(tm.name()).isEqualTo(name));
+                .value(tm -> assertThat(tm.name()).isEqualTo(name))
+                .returnResult()
+                .getResponseBody();
     }
 
     @Test
