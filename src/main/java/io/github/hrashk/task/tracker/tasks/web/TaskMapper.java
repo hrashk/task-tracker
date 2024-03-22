@@ -7,4 +7,6 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public abstract class TaskMapper {
     public abstract TaskModel map(Task task);
+
+    public abstract Task map(TaskModel task);
 }

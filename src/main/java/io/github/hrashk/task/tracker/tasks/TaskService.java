@@ -27,4 +27,8 @@ public class TaskService {
     public Mono<Task> findById(String id) {
         return taskRepository.findById(id);
     }
+
+    public Mono<Task> save(Task task) {
+        return taskRepository.save(task);
+    }
 }
