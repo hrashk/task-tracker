@@ -27,8 +27,7 @@ public class UserController {
         return userService.findById(id)
                 .map(mapper::map)
                 .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build())
-        ;
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @PostMapping

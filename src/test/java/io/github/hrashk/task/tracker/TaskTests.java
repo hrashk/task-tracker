@@ -1,5 +1,6 @@
 package io.github.hrashk.task.tracker;
 
+import io.github.hrashk.task.tracker.tasks.Task;
 import io.github.hrashk.task.tracker.tasks.web.TaskModel;
 import org.junit.jupiter.api.Test;
 
@@ -26,4 +27,33 @@ public class TaskTests extends IntegrationTest {
         assertThat(response).anySatisfy(tm ->
                 assertThat(tm.observers()).as("task observers").isNotEmpty());
     }
+
+    @Test
+    void getTaskById() {
+        Task t = seeder.tasks().get(0);
+
+        webTestClient.get().uri("/api/v1/tasks/" + t.getId())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(TaskModel.class)
+                .value(tm -> assertThat(tm.id()).isEqualTo(t.getId()));
+    }
+
+    @Test
+    void createTask() {}
+
+    @Test
+    void updateTask() {}
+
+    @Test
+    void updateAuthor() {}
+
+    @Test
+    void updateAssignee() {}
+
+    @Test
+    void addObserver() {}
+
+    @Test
+    void deleteById() {}
 }

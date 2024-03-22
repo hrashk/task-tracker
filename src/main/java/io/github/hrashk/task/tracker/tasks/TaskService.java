@@ -5,6 +5,7 @@ import io.github.hrashk.task.tracker.users.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
@@ -21,5 +22,9 @@ public class TaskService {
                         .doOnNext(t::updateUsers)
                         .defaultIfEmpty(Map.of())
                         .thenReturn(t));
+    }
+
+    public Mono<Task> findById(String id) {
+        return taskRepository.findById(id);
     }
 }
