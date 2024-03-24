@@ -21,10 +21,11 @@ You will need a running mongodb instance that you can spin up with docker-compos
 docker compose -f docker/docker-compose.yml up -d
 ```
 
-Once mongodb is up, run the app itself:
+Once mongodb is up, run the app itself. It will not have any data init.
+See the previous section for info on how to spin up the app with some data in it.
 
 ```bash
-java -jar target/news-api-0.0.1-SNAPSHOT.jar
+java -jar target/task-tracker-0.0.1-SNAPSHOT.jar
 ```
 
 You may stop the instance once you're finished.
@@ -34,23 +35,24 @@ docker compose -f docker/docker-compose.yml down
 
 ## Available commands
 
-The rest api services manages authors, news, their categories, and comments.
-The following URL shows the Swagger / Open API documentation of the available end points. Here you may try out
-individual requests. When updating and deleting news and comments you must also specify the userId as the request
-parameter in the URL. It must equal the author id of the respective entity, otherwise you will get 403 Forbidden
-response. This logic is implemented with Spring AOP.
+The REST API covers CRUD operations of the user and task entities.
+For the task entity specifically, one can add an observer user by its id.
 
-http://localhost:8080/swagger-ui/index.html
+Get the list of all users and tasks
 
-The next URL shows the definition of the end points in json format. It can be imported into a Postman collection,
-for example.
+```bash
+curl http://localhost:8080/api/v1/users
+curl http://localhost:8080/api/v1/tasks
+```
 
-http://localhost:8080/v3/api-docs
+Replace the task and user id in the following request to add an observer
 
+```bash
+curl -d '{"id":"3a704760-692a-47ca-96e3-973ca459b759"}' -H "Content-Type: application/json" \
+-X POST http://localhost:8080/api/v1/tasks/886a3e58-e5c6-4e0b-ad41-e5fb91b2fa1e/observers
+```
 
 ## Configuration
 
 The app reads its configuration from the `src/main/resources/application.yml` file.
-You may override any of the parameters from the command line using the `-D` flag similar to the examples above.
-
-The following configuration parameters govern the behavior of the app
+You may override any of the parameters from the command line using the `-D` flag.
