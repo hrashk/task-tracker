@@ -38,4 +38,11 @@ public class TaskController {
                         .created(URI.create("/api/v1/tasks" + body.id()))
                         .body(body));
     }
+
+    @PutMapping("/{id}")
+    public Mono<ResponseEntity<TaskModel>> updateTask(@PathVariable String id, @RequestBody TaskModel task) {
+        return taskService.update(id, mapper.map(task))
+                .map(mapper::map)
+                .map(ResponseEntity::ok);
+    }
 }

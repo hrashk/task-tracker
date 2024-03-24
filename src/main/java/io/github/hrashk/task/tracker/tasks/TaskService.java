@@ -2,6 +2,7 @@ package io.github.hrashk.task.tracker.tasks;
 
 import io.github.hrashk.task.tracker.users.User;
 import io.github.hrashk.task.tracker.users.UserService;
+import io.github.hrashk.task.tracker.util.BeanCopyUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -35,5 +36,14 @@ public class TaskService {
 
     public Mono<Task> save(Task task) {
         return taskRepository.save(task);
+    }
+
+    public Mono<Task> update(String id, Task task) {
+        return taskRepository.findById(id)
+                .flatMap(taskToUpdate -> {
+                    BeanCopyUtils.copyProperties(task, taskToUpdate);
+
+                    return taskRepository.save(taskToUpdate);
+                });
     }
 }

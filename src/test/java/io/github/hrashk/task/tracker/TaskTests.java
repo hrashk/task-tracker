@@ -2,18 +2,24 @@ package io.github.hrashk.task.tracker;
 
 import io.github.hrashk.task.tracker.tasks.Task;
 import io.github.hrashk.task.tracker.tasks.TaskStatus;
+import io.github.hrashk.task.tracker.tasks.web.TaskMapper;
 import io.github.hrashk.task.tracker.tasks.web.TaskModel;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TaskTests extends IntegrationTest {
 
     private static final String FANCY_NAME = "Fancy task";
+
+    @Autowired
+    private TaskMapper mapper;
 
     @Test
     void getAllTasks() {
@@ -80,13 +86,24 @@ public class TaskTests extends IntegrationTest {
     }
 
     @Test
-    void updateTask() {}
+    void updateTask() {
+        Task t = seeder.tasks().get(0).toBuilder()
+                .name(FANCY_NAME)
+                .assignee(seeder.users().get(4))
+                .observers(Set.of(seeder.users().get(5), seeder.users().get(6)))
+                .build();
 
-    @Test
-    void updateAuthor() {}
+        webTestClient.put().uri("/api/v1/tasks/" + t.getId())
+                .body(Mono.just(mapper.map(t)), TaskModel.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(TaskModel.class)
+                .value(tm -> assertThat(tm.id()).isEqualTo(t.getId()));
 
-    @Test
-    void updateAssignee() {}
+        TaskModel updated = checkTaskName(t.getId(), FANCY_NAME);
+        assertThat(updated.assignee().id()).isEqualTo(seeder.users().get(4).getId());
+        assertThat(updated.observers()).hasSize(2);
+    }
 
     @Test
     void addObserver() {}
