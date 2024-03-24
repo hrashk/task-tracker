@@ -2,6 +2,7 @@ package io.github.hrashk.task.tracker;
 
 import io.github.hrashk.task.tracker.tasks.Task;
 import io.github.hrashk.task.tracker.tasks.TaskStatus;
+import io.github.hrashk.task.tracker.tasks.web.ObserverModel;
 import io.github.hrashk.task.tracker.tasks.web.TaskMapper;
 import io.github.hrashk.task.tracker.tasks.web.TaskModel;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -106,7 +108,21 @@ public class TaskTests extends IntegrationTest {
     }
 
     @Test
-    void addObserver() {}
+    void addObserver() {
+        Task t = seeder.tasks().get(0);
+        String observerId = seeder.users().get(5).getId();
+
+        webTestClient.post().uri("/api/v1/tasks/%s/observers".formatted(t.getId()))
+                .body(Mono.just(new ObserverModel(observerId)), ObserverModel.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(TaskModel.class)
+                .value(tm -> assertThat(tm.id()).isEqualTo(t.getId()));
+
+        TaskModel updated = checkTaskName(t.getId(), t.getName());
+        assertThat(updated.observers()).hasSize(1);
+        assertThat(updated.observers()).anyMatch(o -> Objects.equals(o.id(), observerId));
+    }
 
     @Test
     void deleteById() {}

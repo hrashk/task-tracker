@@ -45,4 +45,11 @@ public class TaskController {
                 .map(mapper::map)
                 .map(ResponseEntity::ok);
     }
+
+    @PostMapping("/{id}/observers")
+    public Mono<ResponseEntity<TaskModel>> addObserver(@PathVariable String id, @RequestBody ObserverModel observer) {
+        return taskService.addObserver(id, observer.id())
+                .map(mapper::map)
+                .map(ResponseEntity::ok);
+    }
 }

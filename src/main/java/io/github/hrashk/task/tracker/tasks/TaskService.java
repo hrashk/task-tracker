@@ -46,4 +46,13 @@ public class TaskService {
                     return taskRepository.save(taskToUpdate);
                 });
     }
+
+    public Mono<Task> addObserver(String id, String observerId) {
+        return taskRepository.findById(id)
+                .flatMap(taskToUpdate -> {
+                    taskToUpdate.addObserverId(observerId);
+
+                    return taskRepository.save(taskToUpdate);
+                });
+    }
 }

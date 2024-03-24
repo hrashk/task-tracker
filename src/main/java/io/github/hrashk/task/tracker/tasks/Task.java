@@ -75,6 +75,14 @@ public class Task {
         }
     }
 
+    public void addObserverId(String observerId) {
+        if (observerIds == null) {
+            observerIds = new HashSet<>();
+        }
+
+        observerIds.add(observerId);
+    }
+
     public static class TaskBuilder {
         public TaskBuilder author(User user) {
             this.author = user;
