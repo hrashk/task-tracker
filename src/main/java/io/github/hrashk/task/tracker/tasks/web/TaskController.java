@@ -52,4 +52,9 @@ public class TaskController {
                 .map(mapper::map)
                 .map(ResponseEntity::ok);
     }
+
+    @DeleteMapping("/{id}")
+    public Mono<ResponseEntity<Void>> deleteTask(@PathVariable String id) {
+        return taskService.deleteById(id).thenReturn(ResponseEntity.noContent().build());
+    }
 }

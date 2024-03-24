@@ -125,5 +125,16 @@ public class TaskTests extends IntegrationTest {
     }
 
     @Test
-    void deleteById() {}
+    void deleteById() {
+        Task t = seeder.tasks().get(0);
+
+
+        webTestClient.delete().uri("/api/v1/tasks/" + t.getId())
+                .exchange()
+                .expectStatus().isNoContent();
+
+        webTestClient.get().uri("/api/v1/tasks/" + t.getId())
+                .exchange()
+                .expectStatus().isNotFound();
+    }
 }
