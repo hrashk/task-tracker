@@ -35,7 +35,8 @@ public class TaskService {
     }
 
     public Mono<Task> save(Task task) {
-        return taskRepository.save(task);
+        return taskRepository.save(task)
+                .flatMap(this::fetchLinkedUsers);
     }
 
     public Mono<Task> update(String id, Task task) {
@@ -44,7 +45,8 @@ public class TaskService {
                     BeanCopyUtils.copyProperties(task, taskToUpdate);
 
                     return taskRepository.save(taskToUpdate);
-                });
+                })
+                .flatMap(this::fetchLinkedUsers);
     }
 
     public Mono<Task> addObserver(String id, String observerId) {
@@ -53,7 +55,8 @@ public class TaskService {
                     taskToUpdate.addObserverId(observerId);
 
                     return taskRepository.save(taskToUpdate);
-                });
+                })
+                .flatMap(this::fetchLinkedUsers);
     }
 
     public Mono<Void> deleteById(String id) {

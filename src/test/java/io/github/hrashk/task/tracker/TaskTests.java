@@ -100,7 +100,10 @@ public class TaskTests extends IntegrationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(TaskModel.class)
-                .value(tm -> assertThat(tm.id()).isEqualTo(t.getId()));
+                .value(tm -> assertThat(tm.id()).isEqualTo(t.getId()))
+                .value(tm -> assertThat(tm.assignee()).isNotNull())
+                .value(tm -> assertThat(tm.observers()).isNotEmpty())
+        ;
 
         TaskModel updated = checkTaskName(t.getId(), FANCY_NAME);
         assertThat(updated.assignee().id()).isEqualTo(seeder.users().get(4).getId());
@@ -117,7 +120,8 @@ public class TaskTests extends IntegrationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(TaskModel.class)
-                .value(tm -> assertThat(tm.id()).isEqualTo(t.getId()));
+                .value(tm -> assertThat(tm.id()).isEqualTo(t.getId()))
+                .value(tm -> assertThat(tm.observers()).isNotEmpty());
 
         TaskModel updated = checkTaskName(t.getId(), t.getName());
         assertThat(updated.observers()).hasSize(1);
